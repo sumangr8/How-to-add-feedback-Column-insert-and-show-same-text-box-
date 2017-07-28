@@ -1,0 +1,88 @@
+<table width="900">
+  <form method="post" action="">
+    <tr>
+      <td width="50"><input type="text" name="emp_code" placeholder="E-Code" size="5"></td>
+      <td><input type="text" name="name" placeholder="Name"></td>
+      <td><input type="text" name="app_issue" placeholder="Appointment Status"></td>
+      <td><input type="text" name="access_card" placeholder="Acess Card"></td>
+      <td><input type="text" name="phota" placeholder="Pic Status"></td>
+      <td><input type="text" name="adharcard" placeholder="Adhar Status"></td>
+      <td><input type="text" name="pancard" placeholder="Pan Status"></td>
+      <td><input type="date" name="date" ></td>
+      <td><input type="submit" name="s" value="Insert"></td>
+    </tr>
+  </form>
+</table>
+<?php
+if(isset($_POST["s"]))
+{
+  extract($_POST);
+  $con=mysqli_connect("localhost","root","","seoteamc_demo1");
+  $qry=mysqli_query($con,"insert into app_later (emp_code,name,app_issue,access_card,phota,adharcard,pancard,date) values('$emp_code','$name','$app_issue','$access_card','$phota','$adharcard','pancard','$date')");
+  if($qry)
+  {
+    echo "<script>alert('Insert Record')</script>";
+  }
+}
+
+?>
+
+
+<table border="1" width="1350" style="margin-top: 50px;">
+<tr>
+  <h3 style="margin-left: 40%;">Appointment REcord.......</h3>
+</tr>
+<tr>
+  <td>Sr.No</td><td>E-Code</td><td>Name</td><td>Appointment Status</td><td>Acess Card</td><td>Pic Status</td><td>Adhar Status</td>
+  <td>Pan Status</td><td>Date</td><td>Feedback</td><td>Edit</td><td>Delete</td>
+</tr>
+  <?php
+  $i=1;
+  $con=mysqli_connect("localhost","root","","seoteamc_demo1");
+  $qry=mysqli_query($con,"select * from app_later");
+  while($row=mysqli_fetch_array($qry))
+  {
+    extract($row);
+  ?>
+  <tr>
+    <td><?php echo $i; ?></td>
+    <td><?php echo $emp_code; ?></td>
+    <td><?php echo $name; ?></td>
+    <td><?php echo $app_issue; ?></td>
+    <td><?php echo $access_card; ?></td>
+    <td><?php echo $phota; ?></td>
+    <td><?php echo $adharcard; ?></td>
+    <td><?php echo $pancard; ?></td>
+    <td><?php echo $date; ?></td>
+ <!-- Feedback Add in Table-->
+    <form method="post" action="">
+      <td><input type="text" name="feedback" value="<?php echo $feedback; ?>">
+       <input type="hidden" name="getid" value="<?= $row['id'] ?>" >
+       <input type="submit" name="f" value="Update"> 
+      </td>
+    </form>
+<!-- End Feedback Add in Table-->
+    <td><a href="edit_app_later.php?app_id=<?php echo $id; ?>">Edit</a></td>
+    <td><a href="delete_app_later.php?app_id=<?php echo $id; ?>">Delete</a></td>
+
+  </tr>
+
+  <?php
+  $i++;
+  }
+  ?>
+
+<!-- Feedback Update Code-->
+  <?php
+if(isset($_POST["f"]))
+{
+  extract($_POST);
+  $con=mysqli_connect("localhost","root","","seoteamc_demo1");
+  $qry=mysqli_query($con, "update app_later set feedback='$feedback' where id='$getid'");
+  echo "<script>alert('update')</script>";
+  echo "<script>window.open('app_later.php','_self')</script>";
+}
+
+?>
+<!-- End Feedback Update Code-->
+</table>
